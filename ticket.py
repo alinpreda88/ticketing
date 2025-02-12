@@ -88,17 +88,26 @@ def on_submit():
 def refresh_tickets():
     global ticket_list_text, new_ticket_button
     
-    entry.pack_forget()
-    submit_button.pack_forget()
-    subject_dropdown.pack_forget()
+    # Curățăm toate elementele UI existente
+    if 'entry' in globals():
+        entry.pack_forget()
+    if 'submit_button' in globals():
+        submit_button.pack_forget()
+    if 'subject_dropdown' in globals():
+        subject_dropdown.pack_forget()
     if 'ticket_label' in globals():
         ticket_label.pack_forget()
     if 'user_info_label' in globals():
         user_info_label.pack_forget()
+    if 'new_ticket_button' in globals():
+        new_ticket_button.pack_forget()
+    if 'ticket_list_text' in globals():
+        ticket_list_text.pack_forget()
 
     # Reînnoim datele utilizatorului
     user_data = initialize_user_data()
     
+    # Creăm sau actualizăm ticket_list_text
     if 'ticket_list_text' not in globals():
         ticket_list_text = scrolledtext.ScrolledText(root, font=("Arial", 13), width=80, height=20, state="disabled", bg="white", fg="black")
     
@@ -128,23 +137,28 @@ def refresh_tickets():
     
     ticket_list_text.config(state="disabled")
 
-    new_ticket_button = tk.Button(root, text="TICKET NOU", font=("Arial", 13, "bold"), 
-                                 bg="#4CAF50", fg="white", relief="raised", borderwidth=3, 
-                                 command=reset_ui)
+    # Creăm butonul nou doar dacă nu există deja
+    if 'new_ticket_button' not in globals():
+        new_ticket_button = tk.Button(root, text="TICKET NOU", font=("Arial", 13, "bold"), 
+                                    bg="#4CAF50", fg="white", relief="raised", borderwidth=3, 
+                                    command=reset_ui)
     new_ticket_button.pack(pady=10)
 
 def reset_ui():
+    # Curățăm toate elementele UI existente
     if 'ticket_list_text' in globals():
         ticket_list_text.pack_forget()
     if 'ticket_label' in globals():
         ticket_label.pack_forget()
-    new_ticket_button.pack_forget()
+    if 'new_ticket_button' in globals():
+        new_ticket_button.pack_forget()
 
     # Resetăm valorile și starea componentelor
     subject_var.set("Alege subiect")
     entry.delete("1.0", tk.END)
     submit_button.config(state="disabled")
     
+    # Reafișăm componentele principale
     subject_label.pack()
     subject_dropdown.pack(pady=10)
     entry.pack(pady=20)
